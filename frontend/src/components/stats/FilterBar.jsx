@@ -12,7 +12,37 @@ const FilterBar = ({ filters, onFilterChange }) => {
 
     return (
         <div className="filter-bar-container">
-            <h3>Filter Profiles</h3>
+            <h3>Filter Marketplace</h3>
+
+            <div className="filter-group">
+                <label htmlFor="category">Service Category</label>
+                <select 
+                    name="category"
+                    id="category"
+                    value={filters.category || ''}
+                    onChange={handleChange}
+                >
+                    <option value="">All Categories</option>
+                    <option value="MCAT Tutoring">MCAT Tutoring</option>
+                    <option value="Personal Statement">Personal Statement Review</option>
+                    <option value="Mock Interview">Mock Interview Prep</option>
+                    <option value="General Mentorship">General Mentorship</option>
+                </select>
+            </div>
+
+            <div className="filter-group">
+                <label htmlFor="maxRate">Max Hourly Rate ($)</label>
+                <input
+                    type="number"
+                    name="maxRate"
+                    id="maxRate"
+                    min="0"
+                    step="5"
+                    placeholder="e.g., 40 (0 for Free)"
+                    value={filters.maxRate || ''}
+                    onChange={handleChange}
+                />
+            </div>
 
             <div className="filter-group">
                 <label htmlFor="major">Undergraduate Major</label>
@@ -23,7 +53,7 @@ const FilterBar = ({ filters, onFilterChange }) => {
                     name="major"
                     id="major"
                     placeholder="Type a major..."
-                    value={filters.major}
+                    value={filters.major || ''}
                     onChange={handleChange}
                 />
 
@@ -51,7 +81,7 @@ const FilterBar = ({ filters, onFilterChange }) => {
                     min="472"
                     max="528"
                     placeholder="e.g., 500"
-                    value={filters.minMcat}
+                    value={filters.minMcat || ''}
                     onChange={handleChange}
                 />
             </div>
@@ -66,7 +96,7 @@ const FilterBar = ({ filters, onFilterChange }) => {
                     min="0.0"
                     max="4.0"
                     placeholder="e.g., 3.5"
-                    value={filters.minCgpa}
+                    value={filters.minCgpa || ''}
                     onChange={handleChange}
                 />
             </div>
@@ -81,7 +111,7 @@ const FilterBar = ({ filters, onFilterChange }) => {
                     min="0.0"
                     max="4.0"
                     placeholder="e.g., 3.5"
-                    value={filters.minSgpa}
+                    value={filters.minSgpa || ''}
                     onChange={handleChange}
                 />
             </div>

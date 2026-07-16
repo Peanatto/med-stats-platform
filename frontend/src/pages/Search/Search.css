@@ -1,0 +1,68 @@
+.search-page-container {
+    display: flex;
+    gap: 30px;
+    padding: 30px;
+    max-width: 1400px;
+    margin: 0 auto;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.search-sidebar {
+    width: 320px;
+    flex-shrink: 0;
+}
+
+.search-results-area {
+    flex-grow: 1;
+}
+
+.results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 10px;
+}
+
+.results-header h2 {
+    margin: 0;
+    color: #0f172a;
+    font-size: 1.5rem;
+}
+
+.results-count {
+    color: #64748b;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.services-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.no-results-box {
+    background-color: #f8fafc;
+    border: 2px dashed #cbd5e1;
+    border-radius: 10px;
+    padding: 40px;
+    text-align: center;
+    color: #1e293b;
+}
+
+.no-results-box h3 {
+    margin-top: 0;
+    color: #1e293b;
+}
+
+/* Responsive collapse for mobile/smaller screens */
+@media (max-width: 900px) {
+    .search-page-container {
+        flex-direction: column;
+    }
+    .search-sidebar {
+        width: 100%;
+    }
+}
