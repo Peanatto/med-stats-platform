@@ -1,9 +1,11 @@
 import React from 'react';
 import ServiceDetail from '../../components/listings/ServiceDetail';
 import MentorSidebar from '../../components/listings/MentorSidebar';
+import ReviewSection from '../../components/reviews/ReviewSection';
+import SimilarListings from '../../components/listings/SimilarListings';
 import './ListingDetail.css';
 
-// 1. Temporary Mock Data (You can swap this for an import from mockProfiles.js later!)
+// Primary Listing Data
 const mockListingData = {
     title: "Comprehensive MCAT Biology & Biochem Tutoring",
     category: "MCAT Prep",
@@ -19,18 +21,108 @@ const mockListingData = {
     }
 };
 
+// Mock Reviews Array for ReviewSection
+const mockReviewsArray = [
+    {
+        id: "rev-1",
+        reviewerId: "user-101",
+        displayName: "David M.",
+        major: "Biology Major",
+        date: "2 weeks ago",
+        rating: 5,
+        comment: "Sarah is an absolute lifesaver! I was struggling to memorize the metabolic pathways for Biochem, but her custom Anki decks and visual mnemonics made everything click. My section score jumped 4 points on my last AAMC practice exam!"
+    },
+    {
+        id: "rev-2",
+        reviewerId: "user-102",
+        displayName: "Elena R.",
+        major: "Psychology Major",
+        date: "1 month ago",
+        rating: 5,
+        comment: "Incredibly patient and organized. She doesn't just give you the answers; she teaches you how to dissect the AAMC passage experiments step-by-step. Worth every penny."
+    },
+    {
+        id: "rev-3",
+        reviewerId: "user-103",
+        displayName: "Marcus T.",
+        major: "Post-Baccalaureate",
+        date: "2 months ago",
+        rating: 4,
+        comment: "Great session focused heavily on high-yield organ systems. She helped me identify my weak spots in endocrine physiology quickly. Highly recommend for targeted content review!"
+    }
+];
+
+// Mock Similar Listings Array (Structured identically to ServiceCard props)
+const mockSimilarListings = [
+    {
+        id: "sim-1",
+        title: "Intensive CARS & Reading Comprehension Strategy",
+        category: "MCAT Prep",
+        hourlyRate: 40,
+        rating: 4.9,
+        reviewCount: 14,
+        displayName: "Alex Chen",
+        undergradMajor: "Philosophy & English",
+        mcat: "524",
+        cgpa: "3.88",
+        sgpa: "3.80",
+        clinicalHours: 450,
+        researchHours: 200,
+        shadowingHours: 80,
+        volunteerHours: 300,
+        adviceSnippet: "CARS isn't about outside knowledge; it's about understanding the author's underlying architecture and tone."
+    },
+    {
+        id: "sim-2",
+        title: "High-Yield Organic Chemistry & Reaction Mechanisms",
+        category: "MCAT Prep",
+        hourlyRate: 50,
+        rating: 5.0,
+        reviewCount: 22,
+        displayName: "Priya Patel",
+        undergradMajor: "Biochemistry",
+        mcat: "520",
+        cgpa: "3.98",
+        sgpa: "3.96",
+        clinicalHours: 600,
+        researchHours: 850,
+        shadowingHours: 120,
+        volunteerHours: 150,
+        adviceSnippet: "Stop memorizing organic reactions! Focus on nucleophiles, electrophiles, and electron flow."
+    },
+    {
+        id: "sim-3",
+        title: "General Chemistry & Physics Formula Mastery",
+        category: "MCAT Prep",
+        hourlyRate: 35,
+        rating: 4.8,
+        reviewCount: 9,
+        displayName: "Jordan Taylor",
+        undergradMajor: "Biomedical Engineering",
+        mcat: "518",
+        cgpa: "3.75",
+        sgpa: "3.82",
+        clinicalHours: 300,
+        researchHours: 400,
+        shadowingHours: 50,
+        volunteerHours: 500,
+        adviceSnippet: "Dimensional analysis and unit tracking can save you on half of the Chem/Phys math calculations."
+    }
+];
+
 const ListingDetail = () => {
 
-    // 2. Dummy event handler to test button wiring
-    const handleBookNowClick = () => {
-        alert("🎉 'Request Booking' button works! The BookingModal will trigger here.");
+    const handleBookNowClick = (mentorData) => {
+        alert(`🎉 Requesting booking with ${mentorData?.displayName || mockListingData.mentor.displayName}!`);
     };
 
     return (
         <div className="listing-detail-page">
+            
+            {/* TOP SECTION: 2-Column Grid */}
             <div className="listing-detail-container">
                 
-                {/* Left Column: Product Details */}
+                {/* Left Column: Product Details & Reviews */}
                 <div className="main-content">
                     <ServiceDetail 
                         title={mockListingData.title}
@@ -40,11 +132,11 @@ const ListingDetail = () => {
                         tags={mockListingData.tags}
                     />
 
-                    {/* Temporary visual box to make the page long enough to test scroll/sticky! */}
-                    <div className="main-content-test-space">
-                        <h4>🚧 Future Component Zone</h4>
-                        <p>This empty space is here so you can scroll down and watch the MentorSidebar float smoothly on the right! Later, your ReviewSection and SimilarListings components will live here.</p>
-                    </div>
+                    {/* Swapped out the old temporary test space for ReviewSection */}
+                    <ReviewSection 
+                        reviews={mockReviewsArray} 
+                        averageRating="4.9" 
+                    />
                 </div>
 
                 {/* Right Column: Sticky Mentor Sidebar */}
@@ -60,6 +152,12 @@ const ListingDetail = () => {
                 </div>
 
             </div>
+
+            {/* BOTTOM SECTION: Full-Width Outside the 2-Column Grid */}
+            <div className="full-width-bottom-section">
+                <SimilarListings similarListings={mockSimilarListings} />
+            </div>
+
         </div>
     );
 };

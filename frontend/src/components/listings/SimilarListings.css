@@ -1,0 +1,62 @@
+/* Full-Width Container & Top Separation */
+.similar-listings-section {
+    margin-top: 64px;
+    padding-top: 40px;
+    border-top: 2px solid #e2e8f0; /* Visual divider separating it from the details above */
+    width: 100%;
+}
+
+.similar-listings-header {
+    margin-bottom: 24px;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0 0 6px 0;
+}
+
+.section-subtitle {
+    color: #64748b;
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+/* Track Separating 3 Different Listings */
+.similar-listings-track {
+    display: grid;
+    /* Creates 3 equal columns on desktop, but collapses automatically on smaller screens */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 48px;
+    width: 100%;
+}
+
+/* Ensuring ServiceCard Flexes to Fill the Grid Cell */
+.card-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* Resets ServiceCard fixed widths to fit */
+.card-wrapper > * {
+    width: 100%;
+    flex: 1;
+}
+
+/* Mobile Adaptation (Horizontal Scroll Fallback) */
+@media (max-width: 768px) {
+    .similar-listings-track {
+        display: flex;
+        overflow-x: auto; /* Enables horizontal swipe scrolling on mobile/tablets */
+        scroll-snap-type: x mandatory; /* Makes cards snap neatly into place as you swipe */
+        padding-bottom: 16px;
+        margin-right: -16px; /* Allows cards to peek off the edge of the screen */
+    }
+
+    .card-wrapper {
+        min-width: 280px; /* Forces cards to stay wide so they scroll horizontally instead of squishing */
+        scroll-snap-align: start;
+    }
+}
