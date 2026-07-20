@@ -1,0 +1,86 @@
+/* Container styling */
+.service-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    color: #1e293b;
+}
+
+/* Header layout, title left, price right */
+.service-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 20px;
+}
+
+.title-area {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.category-badge {
+    align-self: flex-start;
+    background-color: #eff6ff;
+    color: #2563eb;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 4px 10px;
+    border-radius: 9999px;
+}
+
+.service-title {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+/* Price styling */
+.price-badge {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #0f172a;
+    white-space: nowrap;
+}
+
+/* Description body */
+.service-description-box {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: #475569;
+}
+
+/* Tag container */
+.service-description-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.tag-pill {
+    background-color: #f1f5f9;
+    color: #475569;
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 16px;
+    transition: background-color 0.2s ease;
+}
+
+.tag-pill:hover {
+    background-color: #e2e8f0;
+}
+
+/* For mobile, stack header */
+@media (max-width: 640px) {
+    .service-header {
+        flex-direction: column;
+    }
+}

@@ -1,0 +1,34 @@
+/* Center the page and give it breathing room */
+.listing-detail-page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+/* The master grid: left column is flexible, right column is a fixed 350px */
+.listing-detail-container {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 40px;
+    
+    /* CRITICAL FOR STICKY TO WORK: Prevents the sidebar column from stretching! */
+    /* align-items: start; */
+}
+
+/* Add some temporary height to the left column just so you can test scrolling! */
+.main-content-test-space {
+    margin-top: 40px;
+    padding: 20px;
+    background-color: #f8fafc;
+    border: 1px dashed #cbd5e1;
+    border-radius: 12px;
+    color: #64748b;
+    height: 600px; /* Temporary spacing to force the page to scroll */
+}
+
+/* Responsive: Stack vertically on screens smaller than 850px */
+@media (max-width: 850px) {
+    .listing-detail-container {
+        grid-template-columns: 1fr;
+    }
+}
