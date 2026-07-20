@@ -1,8 +1,10 @@
 import React from 'react';
+import { useState } from 'react';
 import ServiceDetail from '../../components/listings/ServiceDetail';
 import MentorSidebar from '../../components/listings/MentorSidebar';
 import ReviewSection from '../../components/reviews/ReviewSection';
 import SimilarListings from '../../components/listings/SimilarListings';
+import BookingModal from '../../components/modals/BookingModal';
 import './ListingDetail.css';
 
 // Primary Listing Data
@@ -112,8 +114,10 @@ const mockSimilarListings = [
 
 const ListingDetail = () => {
 
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
     const handleBookNowClick = (mentorData) => {
-        alert(`🎉 Requesting booking with ${mentorData?.displayName || mockListingData.mentor.displayName}!`);
+        setIsModalOpen(true);
     };
 
     return (
@@ -157,6 +161,14 @@ const ListingDetail = () => {
             <div className="full-width-bottom-section">
                 <SimilarListings similarListings={mockSimilarListings} />
             </div>
+
+            {/* Floating Modal Overlay */}
+            <BookingModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                mentorName={mockListingData.mentor.displayName}
+                hourlyRate={mockListingData.hourlyRate}
+            />
 
         </div>
     );

@@ -1,0 +1,209 @@
+/* Fixed Viewport Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(15, 23, 42, 0.65); /* Dark slate with 65% opacity for focus */
+    backdrop-filter: blur(4px); /* Modern frosted-glass effect on the background page */
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* The Modal Shell */
+.modal-content {
+    background-color: #ffffff;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 520px;
+    max-height: 90vh; /* Prevents modal from overflowing tall screens */
+    overflow-y: auto; /* Enables internal scrolling if screen height is small */
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    display: flex;
+    flex-direction: column;
+    animation: modalFadeIn 0.2s ease-out forwards;
+}
+
+/* Smooth pop-in animation */
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Header Layout */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 20px 24px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.modal-title {
+    margin: 0 0 4px 0;
+    font-size: 1.35rem;
+    color: #0f172a;
+}
+
+.modal-subtitle {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #64748b;
+}
+
+.highlight-name {
+    color: #2563eb;
+    font-weight: 600;
+}
+
+/* Stripped-down button for the clean 'X' icon */
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 1.75rem;
+    line-height: 1;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 16px;
+    transition: color 0.15s ease;
+}
+
+.close-btn:hover {
+    color: #0f172a;
+}
+
+/* Form Container & Layout */
+.booking-form {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form-row {
+    display: flex;
+    gap: 16px;
+}
+
+.flex-1 { flex: 1; }
+.flex-2 { flex: 2; }
+
+/* Input Groups */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-group label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #334155;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    padding: 10px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    color: #0f172a;
+    background-color: #ffffff;
+    font-family: inherit;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.form-group textarea {
+    resize: vertical;
+}
+
+/* Dynamic Price Review */
+.price-preview-box {
+    background-color: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    padding: 12px 16px;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.95rem;
+    color: #166534;
+    margin-top: 4px;
+}
+
+.total-price {
+    font-size: 1.25rem;
+    font-weight: 800;
+    padding-left: 8px;
+}
+
+/* Primary Submit Button */
+.primary-submit-btn {
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.primary-submit-btn:hover {
+    background-color: #1d4ed8;
+}
+
+/* Responsive adjustment for small mobile screens */
+@media (max-width: 480px) {
+    .form-row {
+        flex-direction: column;
+        gap: 16px;
+    }
+}
+
+/* Footer Actions */
+.modal-footer {
+    padding: 16px 24px;
+    background-color: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+    border-radius: 0 0 12px 12px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.secondary-btn {
+    background-color: #ffffff;
+    border: 1px solid #cbd5e1;
+    color: #475569;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.secondary-btn:hover {
+    background-color: #f1f5f9;
+}
