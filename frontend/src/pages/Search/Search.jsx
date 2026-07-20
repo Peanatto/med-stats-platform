@@ -102,6 +102,7 @@ const Search = () => {
                         filteredProfiles.map(profile => (
                             <ServiceCard
                                 key={profile.id}
+                                id={profile.id}
                                 displayName={profile.displayName}
                                 undergradMajor={profile.undergradMajor}
                                 title={profile.title}
@@ -110,7 +111,7 @@ const Search = () => {
                                 rating={profile.rating}
                                 reviewCount={profile.reviewCount}
                                 cgpa={profile.cgpa}
-                                sgpa={profile.cgpa}
+                                sgpa={profile.sgpa}
                                 mcat={profile.mcat}
                                 clinicalHours={profile.clinicalHours}
                                 researchHours={profile.researchHours}

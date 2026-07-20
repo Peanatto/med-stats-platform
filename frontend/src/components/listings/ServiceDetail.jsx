@@ -32,9 +32,11 @@ const ServiceDetail = ({
                 </div>
                 <div className="service-description-tags">
                     {tags.map((tag, index) => {
-                        <span key={index} className="tag-pill">
-                            #{tag}
-                        </span>
+                        return (
+                            <span key={index} className="tag-pill">
+                                #{tag}
+                            </span>
+                        );
                     })}
                 </div>
             </div>

@@ -1,7 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './ServiceCard.css';
 
 const ServiceCard = ({
+    id, 
     displayName, 
     undergradMajor,
     // New Marketplace Props
@@ -22,12 +24,24 @@ const ServiceCard = ({
     // Action Handler
     onBookNow
 }) => {
+
+    // Initialize navigation hook
+    const navigate = useNavigate();
+    
+    // Handler for clicking main body of card
+    const handleCardClick = () => {
+        if (id) {
+            navigate(`/listings/${id}`);
+        } else {
+            console.warn("ServiceCard rendered without an id prop!")
+        }
+    };
     
     // Format hourly rate cleanly (handles Free/Volunteer sessions)
     const formattedRate = Number(hourlyRate) === 0 ? "Free / Volunteer" : `$${hourlyRate}/hr`;
 
     return (
-        <div className="service-card">
+        <div className="service-card" onClick={handleCardClick} style={{ cursor: 'pointer' }}>
             
             {/* 1. Marketplace Header: Title, Category, and Price */}
             <div className="service-header">
@@ -76,7 +90,7 @@ const ServiceCard = ({
             )}
 
             {/* 5. Collapsible Experience Hours (Keeps card UI clean) */}
-            <details className="hours-accordion">
+            <details className="hours-accordion" onClick={(e) => e.stopPropagation()}>
                 <summary className="accordion-summary">View Extracurricular Background</summary>
                 <div className="hours-grid">
                     <div><strong>Clinical:</strong> {clinicalHours} hrs</div>
@@ -90,7 +104,12 @@ const ServiceCard = ({
             <div className="service-footer">
                 <button 
                     className="book-now-btn"
-                    onClick={() => onBookNow && onBookNow({ title, displayName, hourlyRate })}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        if (onBookNow) {
+                            onBookNow({ title, displayName, hourlyRate });
+                        }
+                    }}
                 >
                     Request Booking
                 </button>
