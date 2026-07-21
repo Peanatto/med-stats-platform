@@ -1,0 +1,135 @@
+.my-listings-container {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 32px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.listings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.listings-title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+.listings-subtitle {
+    margin: 4px 0 0 0;
+    color: #64748b;
+    font-size: 0.95rem;
+}
+
+.btn-add-listing, .btn-add-listing-empty {
+    background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    white-space: nowrap;
+    box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+    transition: opacity 0.2s, transform 0.1s;
+}
+
+.btn-add-listing:hover, .btn-add-listing-empty:hover {
+    opacity: 0.95;
+}
+
+.listings-divider {
+    border: 0;
+    height: 1px;
+    background-color: #e2e8f0;
+    margin: 24px 0 32px 0;
+}
+
+/* Responsive Grid for Cards */
+.listings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+}
+
+.listing-card-wrapper {
+    display: flex;
+    flex-direction: column;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 12px;
+    gap: 12px;
+}
+
+.listing-card-actions {
+    display: flex;
+    gap: 8px;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 12px;
+}
+
+.btn-card-edit, .btn-card-pause {
+    flex: 1;
+    padding: 8px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-card-edit {
+    background-color: #eff6ff;
+    color: #2563eb;
+    border: 1px solid #bfdbfe;
+}
+
+.btn-card-edit:hover {
+    background-color: #dbeafe;
+}
+
+.btn-card-pause {
+    background-color: #ffffff;
+    color: #64748b;
+    border: 1px solid #cbd5e1;
+}
+
+.btn-card-pause:hover {
+    background-color: #f1f5f9;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 48px 24px;
+    background-color: #f8fafc;
+    border: 2px dashed #cbd5e1;
+    border-radius: 12px;
+}
+
+.empty-icon {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 12px;
+}
+
+.empty-state h3 {
+    margin: 0 0 8px 0;
+    color: #0f172a;
+    font-size: 1.2rem;
+}
+
+.empty-state p {
+    color: #64748b;
+    max-width: 400px;
+    margin: 0 auto 20px auto;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}

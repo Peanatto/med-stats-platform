@@ -2,6 +2,7 @@
 export const mockProfiles = [
   {
     id: '1',
+    mentorId: 'user-200',
     displayName: 'FutureDoc_99',
     undergradMajor: 'Biology',
     title: '1-on-1 MCAT Strategy & Comprehensive Schedule Planning',
@@ -9,6 +10,7 @@ export const mockProfiles = [
     hourlyRate: 35,
     rating: 4.9,
     reviewCount: 24,
+    status: 'Active',
     cgpa: 3.85,
     sgpa: 3.80,
     mcat: 515,
@@ -17,8 +19,6 @@ export const mockProfiles = [
     shadowingHours: 50,
     volunteerHours: 150,
     adviceSnippet: 'Consistency beats intensity every time. Treat Anki like brushing your teeth—do it daily without fail.',
-    
-    // Deep Listing Data
     description: 'Struggling to balance CARS practice with content review? In these 1-on-1 sessions, we will build a customized, day-by-day study schedule tailored to your exam date. I specialize in identifying high-yield weaknesses and teaching you how to dissect AAMC passage logic without getting bogged down by extraneous details.',
     tags: ['MCAT', 'Study Schedules', 'Anki', 'Biology', 'CARS'],
     reviews: [
@@ -44,6 +44,7 @@ export const mockProfiles = [
   },
   {
     id: '2',
+    mentorId: 'user-300',
     displayName: 'Anonymous_Owl_45',
     undergradMajor: 'Chemistry',
     title: 'Personal Statement Brainstorming & Narrative Review',
@@ -51,6 +52,7 @@ export const mockProfiles = [
     hourlyRate: 0, 
     rating: 5.0,
     reviewCount: 11,
+    status: 'Active',
     cgpa: 3.92,
     sgpa: 3.95,
     mcat: 520,
@@ -59,8 +61,6 @@ export const mockProfiles = [
     shadowingHours: 100,
     volunteerHours: 200,
     adviceSnippet: 'Don\'t try to fit a mold. Admissions committees can smell inauthenticity from a mile away; write about what actually moves you.',
-    
-    // Deep Listing Data
     description: 'Your personal statement should tell a cohesive story about why medicine is your calling, not just list your resume in paragraph form. As a free volunteer service, I will review your drafts, assist with brainstorming core themes, and provide line-by-line feedback on tone, structure, and emotional impact.',
     tags: ['Personal Statement', 'Writing', 'AMCAS', 'Editing', 'Mentorship'],
     reviews: [
@@ -77,6 +77,7 @@ export const mockProfiles = [
   },
   {
     id: '3',
+    mentorId: 'user-400',
     displayName: 'NonTrad_Engineer',
     undergradMajor: 'Biomedical Engineering',
     title: 'Rigorous Mock MMI Interview Practice & Ethics Review',
@@ -84,6 +85,7 @@ export const mockProfiles = [
     hourlyRate: 45,
     rating: 4.8,
     reviewCount: 19,
+    status: 'Active',
     cgpa: 3.65,
     sgpa: 3.60,
     mcat: 518,
@@ -92,8 +94,6 @@ export const mockProfiles = [
     shadowingHours: 80,
     volunteerHours: 500,
     adviceSnippet: 'Being a non-traditional applicant is a superpower, not a weakness. Lean heavily into your real-world problem-solving experience.',
-    
-    // Deep Listing Data
     description: 'Multiple Mini Interviews (MMIs) can be intimidating, but they follow predictable ethical and communication frameworks. We will run timed, realistic mock stations covering medical ethics, healthcare policy, and behavioral scenarios, followed by actionable debriefs to refine your delivery.',
     tags: ['MMI', 'Mock Interview', 'Medical Ethics', 'Non-Traditional', 'Public Speaking'],
     reviews: [
@@ -110,6 +110,7 @@ export const mockProfiles = [
   },
   {
     id: '4',
+    mentorId: 'user-500',
     displayName: 'Dr_Empathy',
     undergradMajor: 'Psychology',
     title: 'General Pre-Med Advising & School List Curation',
@@ -117,6 +118,7 @@ export const mockProfiles = [
     hourlyRate: 20,
     rating: 4.7,
     reviewCount: 8,
+    status: 'Active',
     cgpa: 3.78,
     sgpa: 3.72,
     mcat: 512,
@@ -125,10 +127,65 @@ export const mockProfiles = [
     shadowingHours: 120,
     volunteerHours: 600,
     adviceSnippet: 'Protect your mental health during the application cycle. You cannot pour from an empty cup!',
-    
-    // Deep Listing Data
     description: 'Building a realistic, data-driven school list is one of the most critical steps in avoiding a re-applicant cycle. Together, we will analyze your stats, clinical hours, and regional preferences to categorize schools into reach, target, and baseline options while building a stress-reduction strategy for the cycle.',
     tags: ['School List', 'Advising', 'Mental Health', 'Application Strategy'],
+    reviews: []
+  },
+  // --- ADDED FOR USER-001 (Your Logged-In Mock User) ---
+  {
+    id: '101',
+    mentorId: 'user-001',
+    displayName: 'MedMentor_2026',
+    undergradMajor: 'Neuroscience',
+    title: 'MCAT Biochemistry Passage Walkthroughs & Data Analysis',
+    category: 'MCAT Tutoring',
+    hourlyRate: 45,
+    rating: 5.0,
+    reviewCount: 14,
+    status: 'Active',
+    cgpa: 3.94,
+    sgpa: 3.92,
+    mcat: 524,
+    clinicalHours: 1500,
+    researchHours: 800,
+    shadowingHours: 100,
+    volunteerHours: 300,
+    adviceSnippet: 'Don\'t memorize metabolic pathways in a vacuum—learn to trace the carbons and understand the physiological "why" behind every enzyme trigger.',
+    description: 'Current MS2 at UCLA with a 524 MCAT score (132 B/B). I specialize in breaking down complex experimental design passages and helping pre-meds read research graphs faster under timed conditions.',
+    tags: ['MCAT Prep', 'Biochemistry', 'B/B Section', 'Passage Dissection'],
+    reviews: [
+      {
+        id: 'rev-101-1',
+        reviewerId: 'user-099',
+        displayName: 'Alex R.',
+        major: 'Biomedical Engineering',
+        date: '3 days ago',
+        rating: 5,
+        comment: 'Finally understand enzyme kinetics graphs! Explained simple rules that saved me so much time on practice tests.'
+      }
+    ]
+  },
+  {
+    id: '102',
+    mentorId: 'user-001',
+    displayName: 'MedMentor_2026',
+    undergradMajor: 'Neuroscience',
+    title: 'AMCAS Application & Personal Statement Narrative Editing',
+    category: 'Personal Statement',
+    hourlyRate: 60,
+    rating: 4.9,
+    reviewCount: 8,
+    status: 'Active',
+    cgpa: 3.94,
+    sgpa: 3.92,
+    mcat: 524,
+    clinicalHours: 1500,
+    researchHours: 800,
+    shadowingHours: 100,
+    volunteerHours: 300,
+    adviceSnippet: 'Your personal statement shouldn\'t just be a chronological resume. It needs to tell a cohesive story about your evolution and specific motivation for medicine.',
+    description: 'I serve on the student admissions committee and have reviewed over 100 pre-med essays. I will help you find your unique narrative thread and refine your activity descriptions to stand out to admissions deans.',
+    tags: ['Admissions', 'Personal Statement', 'AMCAS', 'Essay Editing'],
     reviews: []
   }
 ];

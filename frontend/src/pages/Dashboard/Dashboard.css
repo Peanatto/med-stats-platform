@@ -1,0 +1,55 @@
+.dashboard-page-container, 
+.dashboard-layout, 
+.dashboard-sidebar-wrapper, 
+.dashboard-content-area {
+    box-sizing: border-box;
+}
+
+/* Outer Page Container */
+.dashboard-page-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 40px 24px;
+  min-height: calc(100vh - 80px); /* Adjust based on your navbar height */
+  background-color: #f8fafc;
+}
+
+/* Flexbox Layout for Sidebar + Content */
+.dashboard-layout {
+  display: flex;
+  gap: 64px;
+  align-items: flex-start;
+}
+
+/* Left Column: Sidebar Wrapper */
+.dashboard-sidebar-wrapper {
+  flex: 0 0 280px; /* Do not grow, do not shrink, fix at 280px */
+  width: 280px;
+}
+
+/* Right Column: Dynamic Content Area */
+.dashboard-content-area {
+  flex: 1; /* Stretch to take up all remaining horizontal space */
+  min-width: 0; /* Prevents flexbox overflow bugs with grids inside */
+}
+
+/* Responsive Breakpoint for Tablets & Mobile */
+@media (max-width: 900px) {
+  .dashboard-layout {
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .dashboard-sidebar-wrapper {
+    flex: none;
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  /* Disable sticky positioning on mobile so it doesn't block the screen */
+  .dashboard-sidebar-wrapper aside {
+    position: relative;
+    top: 0;
+    height: auto;
+  }
+}
