@@ -2,7 +2,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import './BookingModal.css';
 
-const BookingModal = ({ isOpen, onClose, mentorName, hourlyRate }) => {
+const BookingModal = ({ isOpen, onClose, onSubmit, mentorName, hourlyRate, listingId, user }) => {
 
     // Form State
     const [formData, setFormData] = useState({
@@ -14,7 +14,7 @@ const BookingModal = ({ isOpen, onClose, mentorName, hourlyRate }) => {
 
     // Escape Key Listener
     useEffect(() => {
-            const handleKeyDown = (event) => {
+        const handleKeyDown = (event) => {
             if (event.key === 'Escape') {
                 onClose();
             }
@@ -65,17 +65,19 @@ const BookingModal = ({ isOpen, onClose, mentorName, hourlyRate }) => {
         }
 
         const bookingPayload = {
-            mentorName, 
+            id: `book-${Date.now()}`, 
+            listingId: listingId, 
+            mentorName: mentorName, 
+            studentId: user?.id || 'guest-id', 
+            studentName: user?.displayName || 'Prospective Student', 
             hourlyRate: Number(hourlyRate), 
             ...formData, 
             totalCost: Number(totalCost), 
+            status: 'Pending', 
             requestedAt: new Date().toISOString()
         };
 
-        console.log("Prepared Database Payload:", bookingPayload);
-        alert(`Booking request sent for ${mentorName}! Total: $${totalCost}. Check browser console for JSON payload.`);
-
-        onClose();
+        onSubmit(bookingPayload);
     }
 
     return (

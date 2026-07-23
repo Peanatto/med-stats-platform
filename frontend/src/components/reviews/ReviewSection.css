@@ -43,11 +43,44 @@
     font-weight: 400;
 }
 
+/* Action Buttons for Reviews */
+.btn-leave-review {
+    padding: 8px 16px;
+    background-color: #f1f5f9;
+    color: #0f172a;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
 /* The Review List Container */
 .review-list {
     display: flex;
     flex-direction: column;
     gap: 16px;
+}
+
+.btn-leave-review:hover {
+    background-color: #e2e8f0;
+    border-color: #94a3b8;
+}
+
+.btn-add-review-empty {
+    margin-top: 16px;
+    padding: 10px 20px;
+    background-color: #2563eb;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.btn-add-review-empty:hover {
+    background-color: #1d4ed8;
 }
 
 /* Individual Review Cards */

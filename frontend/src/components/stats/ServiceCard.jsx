@@ -12,6 +12,7 @@ const ServiceCard = ({
     hourlyRate,
     rating = 5.0,
     reviewCount = 0,
+    status = 'Active',
     // Academic & Experience Props
     cgpa, 
     sgpa, 
@@ -22,7 +23,9 @@ const ServiceCard = ({
     volunteerHours, 
     adviceSnippet,
     // Action Handler
-    onBookNow
+    onBookNow, 
+    showBookButton = true, 
+    isInteractive = true
 }) => {
 
     // Initialize navigation hook
@@ -39,10 +42,17 @@ const ServiceCard = ({
     
     // Format hourly rate cleanly (handles Free/Volunteer sessions)
     const formattedRate = Number(hourlyRate) === 0 ? "Free / Volunteer" : `$${hourlyRate}/hr`;
+    const isPaused = status === 'Paused';
 
     return (
-        <div className="service-card" onClick={handleCardClick} style={{ cursor: 'pointer' }}>
+        <div className={`service-card ${isPaused ? "card-paused" : ""}`} onClick={handleCardClick} style={{ cursor: isInteractive ? 'pointer' : 'default' }}>
             
+            {isPaused && (
+                <div className="paused-banner">
+                    PAUSED • HIDDEN FROM MARKETPLACE
+                </div>
+            )}
+
             {/* 1. Marketplace Header: Title, Category, and Price */}
             <div className="service-header">
                 <div className="title-area">
@@ -101,19 +111,21 @@ const ServiceCard = ({
             </details>
 
             {/* 6. Marketplace Action Footer */}
-            <div className="service-footer">
-                <button 
-                    className="book-now-btn"
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        if (onBookNow) {
-                            onBookNow({ title, displayName, hourlyRate });
-                        }
-                    }}
-                >
-                    Request Booking
-                </button>
-            </div>
+            {showBookButton && (
+                <div className="service-footer">
+                    <button 
+                        className="book-now-btn"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            if (onBookNow) {
+                                onBookNow({ title, displayName, hourlyRate });
+                            }
+                        }}
+                    >
+                        Request Booking
+                    </button>
+                </div>
+            )}
 
         </div>
     );

@@ -109,6 +109,48 @@
   box-shadow: 0 0 0 2px #ffffff;
 }
 
+/* Container for widgets and buttons */
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Log Out Button */
+.btn-logout {
+  background-color: transparent;
+  border: 1px solid #fca5a5;
+  color: #ef4444;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-logout:hover {
+  background-color: #fef2f2;
+  border-color: #ef4444;
+}
+
+/* Guest Sign-In Button */
+.btn-signin {
+  text-decoration: none;
+  background-color: #2563eb;
+  color: #ffffff;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-signin:hover {
+  background-color: #1d4ed8;
+  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+}
+
 /* Responsive Hide for Mobile */
 @media (max-width: 600px) {
   .user-display-name {

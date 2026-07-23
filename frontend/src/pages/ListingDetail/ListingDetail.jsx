@@ -1,24 +1,41 @@
-import React from 'react';
-import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import { mockProfiles } from '../../data/mockProfiles';
 import ServiceDetail from '../../components/listings/ServiceDetail';
 import MentorSidebar from '../../components/listings/MentorSidebar';
 import ReviewSection from '../../components/reviews/ReviewSection';
 import SimilarListings from '../../components/listings/SimilarListings';
 import BookingModal from '../../components/modals/BookingModal';
+import ReviewModal from '../../components/modals/ReviewModal';
 import './ListingDetail.css';
 
 const ListingDetail = () => {
 
     // Grab ":id" out of URL
     const { id } = useParams();
+    const navigate = useNavigate();
+    const { user } = useAuth();
+
+    // Local State
+    const [activeListing, setActiveListing] = useState(null);
+    const [reviews, setReviews] = useState([]);
+
+    // State for Modals
+    const [isBookingOpen, setIsBookingOpen] = useState(false);
+    const [isReviewOpen, setIsReviewOpen] = useState(false);
 
     // Find exact mentor in array whose ID matches URL
-    const activeListing = mockProfiles.find(profile => profile.id === id);
+    // const initialListing = mockProfiles.find(profile => profile.id === id);
+    useEffect(() => {
+        const foundListing = mockProfiles.find(profile => profile.id === id);
 
-    // State for Booking Modal
-    const [isModalOpen, setIsModalOpen] = useState(false);
+        if (foundListing) {
+            setActiveListing(foundListing);
+            setReviews(foundListing.reviews || []);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }, [id]);
 
     // Fallback for id error
     if (!activeListing) {
@@ -43,6 +60,38 @@ const ListingDetail = () => {
         similarListings.push(...backfill);
     }
 
+    // HANDLERS
+    // Auth Guard
+    const handleActionGuard = (openModalCallback) => {
+        if (!user) {
+            alert('Please sign in to request a session or leave feedback!');
+            navigate('/login');
+            return;
+        }
+        openModalCallback(true);
+    };
+
+    const handleCreateBooking = (bookingPayload) => {
+        console.log("Prepared Database Booking Payload:", bookingPayload);
+        setIsBookingOpen(false);
+        alert('Booking requested for ${bookingPayload.dateTime}! Total: $${bookingPayload.totalCost}.');
+    };
+
+    const handleCreateReview = (reviewPayload) => {
+        console.log("Prepared Database Review Payload:", reviewPayload);
+
+        // Dynamically update UI
+        const updatedReviews = [reviewPayload, ...reviews];
+        setReviews(updatedReviews);
+
+        // Recalculate average rating
+        const avgRating = (updatedReviews.reduce((acc, rev) => acc + rev.rating, 0) / updatedReviews.length).toFixed(1);
+        setActiveListing(prev => ({ ...prev, rating: Number(avgRating) }));
+
+        setIsReviewOpen(false);
+        alert('Your review has been added to this profile.')
+    }
+
     return (
         <div className="listing-detail-page">
             
@@ -60,8 +109,9 @@ const ListingDetail = () => {
                     />
 
                     <ReviewSection 
-                        reviews={activeListing.reviews || []} 
+                        reviews={reviews || []} 
                         averageRating={activeListing.rating}
+                        onAddReview={() => handleActionGuard(setIsReviewOpen)}
                     />
                 </div>
 
@@ -73,7 +123,7 @@ const ListingDetail = () => {
                         mcat={activeListing.mcat}
                         cgpa={activeListing.cgpa}
                         sgpa={activeListing.sgpa}
-                        onBookNow={() => setIsModalOpen(true)}
+                        onBookNow={() => handleActionGuard(setIsBookingOpen)}
                     />
                 </div>
 
@@ -84,12 +134,24 @@ const ListingDetail = () => {
                 <SimilarListings similarListings={similarListings} />
             </div>
 
-            {/* Floating Modal Overlay */}
+            {/* Floating Modal Overlays */}
             <BookingModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
+                isOpen={isBookingOpen}
+                onClose={() => setIsBookingOpen(false)}
+                onSubmit={handleCreateBooking}
                 mentorName={activeListing.displayName}
                 hourlyRate={activeListing.hourlyRate}
+                listingId={activeListing.id}
+                user={user}
+            />
+
+            <ReviewModal 
+                isOpen={isReviewOpen}
+                onClose={() => setIsReviewOpen(false)}
+                onSubmit={handleCreateReview}
+                mentorName={activeListing.displayName}
+                listingId={activeListing.id}
+                user={user}
             />
 
         </div>

@@ -2,7 +2,7 @@ import React from 'react';
 import ServiceCard from '../stats/ServiceCard';
 import './MyListings.css';
 
-const MyListings = ({ user, allListings = [], onToggleStatus, onDelete }) => {
+const MyListings = ({ user, allListings = [], onToggleStatus, onDelete, onCreateClick, onEditClick }) => {
   // Filter the global marketplace database for listings owned by this user
   const userListings = allListings.filter(listing => listing.mentorId === user.id);
 
@@ -17,7 +17,7 @@ const MyListings = ({ user, allListings = [], onToggleStatus, onDelete }) => {
             Manage the tutoring services, rates, and subjects you currently offer to students.
           </p>
         </div>
-        <button className="btn-add-listing" onClick={() => alert('Navigate to New Listing Form!')}>
+        <button className="btn-add-listing" onClick={onCreateClick}>
           + Add New Listing
         </button>
       </div>
@@ -31,13 +31,17 @@ const MyListings = ({ user, allListings = [], onToggleStatus, onDelete }) => {
             <div key={listing.id} className="listing-card-wrapper">
               
               {/* Reuse ServiceCard */}
-              <ServiceCard {...listing} />
+              <ServiceCard 
+                isInteractive={false}
+                showBookButton={false}
+                {...listing} 
+              />
               
               {/* Dashboard-Specific Quick Actions */}
               <div className="listing-card-actions">
                 <button 
                     className="btn-card-edit"
-                    onClick={() => alert(`Opening edit form for: ${listing.title}`)}
+                    onClick={() => onEditClick(listing)}
                 >
                     Edit Listing
                 </button>
@@ -50,7 +54,7 @@ const MyListings = ({ user, allListings = [], onToggleStatus, onDelete }) => {
                         color: listing.status === 'Paused' ? '#854d0e' : '#64748b'
                     }}
                 >
-                    {listing.status === 'Paused' ? 'Unpase / Show' : 'Pause / Hide'}
+                    {listing.status === 'Paused' ? 'Unpause / Show' : 'Pause / Hide'}
                 </button>
 
                 <button 
@@ -75,7 +79,7 @@ const MyListings = ({ user, allListings = [], onToggleStatus, onDelete }) => {
           <span className="empty-icon">📂</span>
           <h3>No Active Listings Yet</h3>
           <p>You haven't published any mentorship services to the marketplace. Create your first listing to start accepting students!</p>
-          <button className="btn-add-listing-empty">Create First Listing</button>
+          <button className="btn-add-listing-empty" onClick={onCreateClick}>Create First Listing</button>
         </div>
       )}
 

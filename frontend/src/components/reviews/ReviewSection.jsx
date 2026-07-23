@@ -1,7 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './ReviewSection.css';
 
-const ReviewSection = ({ reviews = [], averageRating = 5.0 }) => {
+const ReviewSection = ({ reviews = [], averageRating = 5.0, onAddReview }) => {
+    const navigate = useNavigate();
 
     // Defensive Empty State Handling
     if (!reviews || reviews.length === 0) {
@@ -11,14 +13,23 @@ const ReviewSection = ({ reviews = [], averageRating = 5.0 }) => {
                 <p className="empty-message">
                     No reviews yet. Be the first student to book a session and leave feedback!
                 </p>
+                <button 
+                    type="button"
+                    className="btn-add-review-empty"
+                    onClick={onAddReview}
+                >
+                    + Leave First Review
+                </button>
             </div>
+            
         );
     }
 
     // Click Handler for Reviewer Profiles
-    const handleNameClick = (reviewerId, displayName) => {
-        // In the future, this will use React Router: navigate(`/profile/${reviewerId}`)
-        alert(`Navigating to ${displayName}'s profile page (ID: ${reviewerId})`);
+    const handleNameClick = (reviewerId) => {
+        if (reviewerId) {
+            navigate(`/dashboard/${reviewerId}`);
+        }
     };
 
     return (
@@ -32,6 +43,14 @@ const ReviewSection = ({ reviews = [], averageRating = 5.0 }) => {
                     <span className="rating-number">{averageRating}</span>
                     <span className="review-count">({reviews.length} reviews)</span>
                 </div>
+
+                <button 
+                    type="button"
+                    className="btn-leave-review"
+                    onClick={onAddReview}
+                >
+                    + Leave a Review
+                </button>
             </div>
 
             {/* Review List Mapping */}
@@ -45,9 +64,9 @@ const ReviewSection = ({ reviews = [], averageRating = 5.0 }) => {
                                 <button 
                                     type="button"
                                     className="clickable-name"
-                                    onClick={() => handleNameClick(review.reviewerId, review.displayName)}
+                                    onClick={() => handleNameClick(review.reviewerId)}
                                 >
-                                    {review.displayName}
+                                    {review.displayName || 'Student'}
                                 </button>
                                 {review.major && <span className="reviewer-major"> • {review.major}</span>}
                             </div>
@@ -56,8 +75,8 @@ const ReviewSection = ({ reviews = [], averageRating = 5.0 }) => {
 
                         {/* Rating & Comment Body */}
                         <div className="review-rating">
-                            {"★".repeat(Math.floor(review.rating))}
-                            <span className="numerical-rating"> ({review.rating}.0)</span>
+                            {"★".repeat(Math.floor(review.rating || 5))}
+                            <span className="numerical-rating"> ({review.rating || 5}.0)</span>
                         </div>
                         
                         <p className="review-comment">{review.comment}</p>

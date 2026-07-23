@@ -1,30 +1,68 @@
 import React, { useState } from 'react';
+import { useAuth } from '../../context/AuthContext';
 import DashboardSidebar from '../../components/dashboard/DashboardSidebar';
 import ProfileSettings from '../../components/dashboard/ProfileSettings';
 import MyListings from '../../components/dashboard/MyListings';
 import MyBookings from '../../components/dashboard/MyBookings';
+import ListingFormModal from '../../components/modals/ListingFormModal';
 
-import { mockUser } from '../../data/mockUser';
 import { mockBookings as initialBookings } from '../../data/mockBookings';
 import { mockProfiles as initialProfiles } from '../../data/mockProfiles';
 
 import './Dashboard.css';
 
 const Dashboard = () => {
+
+    const { user, updateUser } = useAuth();
+
     // Navigation State: Defaults to 'profile' tab
     const [activeTab, setActiveTab] = useState('profile');
 
     // Data State: Storing mock data in state
-    const [user, setUser] = useState(mockUser);
     const [bookings, setBookings] = useState(initialBookings);
     const [listings, setListings] = useState(initialProfiles);
 
-    // --- BUTTON HANDLERS (Simulating Database Updates) ---
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [editingListing, setEditingListing] = useState(null); // Null -> Create, Object -> Edit
 
-    // Handler for Tab 1: Saving Profile Edits
+    // Update user profile (now updating global auth state)
     const handleUpdateProfile = (updatedUserData) => {
-        setUser(updatedUserData);
-        alert('✅ Profile updated successfully! (In-memory simulation)');
+        updateUser(updatedUserData);
+        alert('Profile updated successfully!');
+    };
+
+    // Creating a new listing
+    const handleOpenCreateModal = () => {
+        setEditingListing(null);
+        setIsModalOpen(true);
+    };
+
+    // Editing an existing listing (we pass in the listing)
+    const handleOpenEditModal = (listing) => {
+        setEditingListing(listing);
+        setIsModalOpen(true);
+    };
+
+    const handleSaveListing = (formData) => {
+        if (editingListing) {
+            setListings(prev => prev.map(item => item.id === editingListing.id ? { ...item, ...formData } : item));
+            alert('Listing updated successfully!');
+        } else {
+            const newListing = {
+                ...formData, 
+                id: `custom-${Date.now()}`, 
+                mentorId: user.id, 
+                displayName: user.displayName || user.email, 
+                undergradMajor: user.undergradMajor || 'Pre-Med', 
+                rating: 5.0,
+                reviewCount: 0, 
+                status: 'Active', 
+                reviews: []
+            };
+            setListings(prev => [newListing, ...prev]);
+            alert('New listing created successfully!');
+        }
+        setIsModalOpen(false);
     };
 
     // Handler for Tab 3: Accepting/Declining Bookings (To be passed down later)
@@ -65,6 +103,8 @@ const Dashboard = () => {
                         allListings={listings}
                         onToggleStatus={handleToggleListingStatus}
                         onDelete={handleDeleteListing}
+                        onCreateClick={handleOpenCreateModal}
+                        onEditClick={handleOpenEditModal}
                     />
                 );
             case 'bookings':
@@ -77,7 +117,7 @@ const Dashboard = () => {
                 );
             case 'profile':
             default:
-                return <ProfileSettings user={user} onSave={handleUpdateProfile} />;
+                return <ProfileSettings user={user} onSave={handleUpdateProfile}/>;
         }
     };
 
@@ -100,6 +140,15 @@ const Dashboard = () => {
                 </main>
 
             </div>
+
+            {isModalOpen && (
+                <ListingFormModal
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    onSave={handleSaveListing}
+                    initialData={editingListing}
+                />
+            )}
         </div>
     );
 };
