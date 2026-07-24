@@ -1,6 +1,6 @@
 // src/data/mockUser.js
 export const mockUser = {
-  id: "user-001",
+  id: "fcc2aab8-62bb-43de-bd75-79bcddd46f20",
   displayName: "MedMentor_2026",
   undergradMajor: "Neuroscience",
   avatarUrl: null, // Null triggers privacy-friendly fallback

@@ -22,14 +22,14 @@ const DashboardSidebar = ({ user, activeTab, onTabChange }) => {
             <div className="sidebar-user-card">
                 <div className="user-avatar">
                     {user.avatarUrl ? (
-                        <img src={user.avatarUrl} alt={user.displayName} />
+                        <img src={user.avatarUrl} alt={user.profile?.displayName || 'User Avatar'} />
                     ) : (
-                        <span className = "avatar-initials">{getInitials(user.displayName)}</span>
+                        <span className = "avatar-initials">{getInitials(user.profile?.displayName)}</span>
                     )}
                 </div>
                 <div className="user-info">
-                    <h3 className="user-display-name">{user.displayName || 'Anonymous User'}</h3>
-                    <span className="user-major">• {user.undergradMajor || 'Pre-Med'}</span>
+                    <h3 className="user-display-name">{user.profile?.displayName || 'Anonymous User'}</h3>
+                    <span className="user-major">• {user.profile?.undergradMajor || 'Pre-Med'}</span>
                 </div>
             </div>
 
@@ -63,7 +63,7 @@ const DashboardSidebar = ({ user, activeTab, onTabChange }) => {
                     Anonymity Protected
                 </div>
                 <p className="privacy-subtext">
-                    Yoru real identity is hidden from the public marketplace.
+                    Your real identity is hidden from the public marketplace.
                 </p>
             </div>
 

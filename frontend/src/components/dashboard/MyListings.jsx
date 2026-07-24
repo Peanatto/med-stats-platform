@@ -4,7 +4,7 @@ import './MyListings.css';
 
 const MyListings = ({ user, allListings = [], onToggleStatus, onDelete, onCreateClick, onEditClick }) => {
   // Filter the global marketplace database for listings owned by this user
-  const userListings = allListings.filter(listing => listing.mentorId === user.id);
+  const userListings = allListings.filter(listing => listing.providerId === user.id);
 
   return (
     <div className="my-listings-container">
@@ -35,6 +35,16 @@ const MyListings = ({ user, allListings = [], onToggleStatus, onDelete, onCreate
                 isInteractive={false}
                 showBookButton={false}
                 {...listing} 
+                displayName={user.profile?.displayName}
+                undergradMajor={user.profile?.undergradMajor}
+                mcat={user.profile?.mcatScore}
+                sgpa={user.profile?.scienceGpa}
+                cgpa={user.profile?.cumulativeGpa}
+                clinicalHours={user.profile?.clinicalHours}
+                researchHours={user.profile?.researchHours}
+                shadowingHours={user.profile?.shadowingHours}
+                volunteerHours={user.profile?.volunteerHours}
+                adviceSnippet={user.profile?.adviceSnippet}
               />
               
               {/* Dashboard-Specific Quick Actions */}
@@ -48,13 +58,13 @@ const MyListings = ({ user, allListings = [], onToggleStatus, onDelete, onCreate
 
                 <button 
                     className="btn-card-pause"
-                    onClick={() => onToggleStatus(listing.id)}
+                    onClick={() => onToggleStatus(listing.id, listing.isActive)}
                     style={{
-                        backgroundColor: listing.status === 'Paused' ? '#fef9c3' : '#ffffff', 
-                        color: listing.status === 'Paused' ? '#854d0e' : '#64748b'
+                        backgroundColor: !listing.isActive ? '#fef9c3' : '#ffffff', 
+                        color: !listing.isActive ? '#854d0e' : '#64748b'
                     }}
                 >
-                    {listing.status === 'Paused' ? 'Unpause / Show' : 'Pause / Hide'}
+                    {!listing.isActive ? 'Unpause / Show' : 'Pause / Hide'}
                 </button>
 
                 <button 

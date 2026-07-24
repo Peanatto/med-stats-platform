@@ -2,35 +2,67 @@ import React, { useState } from 'react';
 import './ProfileSettings.css';
 
 const ProfileSettings = ({ user, onSave, isOwner = true }) => {
-  // Toggle between read-only View Mode and interactive Edit Mode
-  const [isEditing, setIsEditing] = useState(false);
+    // Toggle between read-only View Mode and interactive Edit Mode
+    const [isEditing, setIsEditing] = useState(false);
 
-  // Local state to hold form edits before saving
-  const [formData, setFormData] = useState({ ...user });
+    // Local state to hold form edits before saving
+    const [formData, setFormData] = useState({ 
+        displayName: user.profile?.displayName || '',
+        undergradMajor: user.profile?.undergradMajor || '',
+        adviceSnippet: user.profile?.adviceSnippet || '',
+        cgpa: user.profile?.cumulativeGpa || '',
+        sgpa: user.profile?.scienceGpa || '',
+        mcat: user.profile?.mcatScore || '',
+        clinicalHours: user.profile?.clinicalHours || 0,
+        researchHours: user.profile?.researchHours || 0,
+        shadowingHours: user.profile?.shadowingHours || 0,
+        volunteerHours: user.profile?.volunteerHours || 0,
+    });
 
-  // Universal change handler for all inputs
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
+    // Universal change handler for all inputs
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
 
-  // Handle Save
-  const handleSaveClick = (e) => {
-    e.preventDefault();
-    if (onSave) {
-      onSave(formData); // Pass updated data up to parent Dashboard
-    }
-    setIsEditing(false); // Switch back to read-only view
-  };
+    // Handle Save
+    const handleSaveClick = (e) => {
+        e.preventDefault();
+        if (onSave) {
+            // Format numerical inputs before sending to parent
+            onSave({
+                ...formData, 
+                cgpa: parseFloat(formData.cgpa) || null, 
+                sgpa: parseFloat(formData.sgpa) || null,
+                mcat: parseInt(formData.mcat, 10) || null,
+                clinicalHours: parseInt(formData.clinicalHours, 10) || 0,
+                researchHours: parseInt(formData.researchHours, 10) || 0,
+                shadowingHours: parseInt(formData.shadowingHours, 10) || 0,
+                volunteerHours: parseInt(formData.volunteerHours, 10) || 0,
+            });
+        }
+        setIsEditing(false); // Switch back to read-only view
+    };
 
-  // Handle Cancel (Revert edits back to original user props)
-  const handleCancelClick = () => {
-    setFormData({ ...user });
-    setIsEditing(false);
-  };
+    // Handle Cancel (Revert edits back to original user props)
+    const handleCancelClick = () => {
+        setFormData({ 
+            displayName: user.profile?.displayName || '',
+            undergradMajor: user.profile?.undergradMajor || '',
+            adviceSnippet: user.profile?.adviceSnippet || '',
+            cgpa: user.profile?.cumulativeGpa || '',
+            sgpa: user.profile?.scienceGpa || '',
+            mcat: user.profile?.mcatScore || '',
+            clinicalHours: user.profile?.clinicalHours || 0,
+            researchHours: user.profile?.researchHours || 0,
+            shadowingHours: user.profile?.shadowingHours || 0,
+            volunteerHours: user.profile?.volunteerHours || 0,
+        });
+        setIsEditing(false);
+    };
 
   return (
     <div className="profile-settings-container">
@@ -70,7 +102,7 @@ const ProfileSettings = ({ user, onSave, isOwner = true }) => {
                                 required
                             />
                         ) : (
-                            <div className="read-only-value">{user.displayName}</div>
+                            <div className="read-only-value">{user.profile?.displayName}</div>
                         )}
                     </div>
 
@@ -86,7 +118,7 @@ const ProfileSettings = ({ user, onSave, isOwner = true }) => {
                                 required
                             />
                         ) : (
-                            <div className="read-only-value">{user.undergradMajor}</div>
+                            <div className="read-only-value">{user.profile?.undergradMajor}</div>
                         )}
                     </div>
                 </div>
@@ -102,7 +134,7 @@ const ProfileSettings = ({ user, onSave, isOwner = true }) => {
                         onChange={handleChange}
                     />
                     ) : (
-                    <div className="read-only-value quote-style">"{user.adviceSnippet}"</div>
+                    <div className="read-only-value quote-style">"{user.profile?.adviceSnippet}"</div>
                     )}
                 </div>
             </div>
@@ -126,7 +158,7 @@ const ProfileSettings = ({ user, onSave, isOwner = true }) => {
                                 onChange={handleChange}
                             />
                         ) : (
-                            <div className="read-only-value metric-highlight">{user.cgpa}</div>
+                            <div className="read-only-value metric-highlight">{user.profile?.cumulativeGpa}</div>
                         )}
                     </div>
 
@@ -144,7 +176,7 @@ const ProfileSettings = ({ user, onSave, isOwner = true }) => {
                                 onChange={handleChange}
                             />
                         ) : (
-                            <div className="read-only-value metric-highlight">{user.sgpa}</div>
+                            <div className="read-only-value metric-highlight">{user.profile?.scienceGpa}</div>
                         )}
                     </div>
 
@@ -161,7 +193,7 @@ const ProfileSettings = ({ user, onSave, isOwner = true }) => {
                                 onChange={handleChange}
                             />
                         ) : (
-                            <div className="read-only-value metric-highlight">{user.mcat}</div>
+                            <div className="read-only-value metric-highlight">{user.profile?.mcatScore}</div>
                         )}
                     </div>
                 </div>
@@ -183,7 +215,7 @@ const ProfileSettings = ({ user, onSave, isOwner = true }) => {
                                 onChange={handleChange}
                             />
                         ) : (
-                            <div className="read-only-value">{user.clinicalHours} hrs</div>
+                            <div className="read-only-value">{user.profile?.clinicalHours} hrs</div>
                         )}
                     </div>
 
@@ -198,7 +230,7 @@ const ProfileSettings = ({ user, onSave, isOwner = true }) => {
                                 onChange={handleChange}
                             />
                         ) : (
-                            <div className="read-only-value">{user.researchHours} hrs</div>
+                            <div className="read-only-value">{user.profile?.researchHours} hrs</div>
                         )}
                     </div>
 
@@ -213,7 +245,7 @@ const ProfileSettings = ({ user, onSave, isOwner = true }) => {
                                 onChange={handleChange}
                             />
                         ) : (
-                            <div className="read-only-value">{user.shadowingHours} hrs</div>
+                            <div className="read-only-value">{user.profile?.shadowingHours} hrs</div>
                         )}  
                     </div>
 
@@ -228,7 +260,7 @@ const ProfileSettings = ({ user, onSave, isOwner = true }) => {
                                 onChange={handleChange}
                             />
                         ) : (
-                            <div className="read-only-value">{user.volunteerHours} hrs</div>
+                            <div className="read-only-value">{user.profile?.volunteerHours} hrs</div>
                         )}
                     </div>
                 </div>

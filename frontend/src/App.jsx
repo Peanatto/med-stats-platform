@@ -8,6 +8,7 @@ import Dashboard from './pages/Dashboard/Dashboard';
 import Navbar from './components/layout/Navbar';
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 const AppRoutes = () => {
 
@@ -58,12 +59,17 @@ const AppRoutes = () => {
 };
 
 function App() {
+
+  const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
   return (
-    <AuthProvider>
-      <Router>
-        <AppRoutes />
-      </Router>
-    </AuthProvider>
+    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+      <AuthProvider>
+        <Router>
+          <AppRoutes />
+        </Router>
+      </AuthProvider>
+    </GoogleOAuthProvider>
   );
 }
 

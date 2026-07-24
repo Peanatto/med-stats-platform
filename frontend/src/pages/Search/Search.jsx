@@ -1,10 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import FilterBar from '../../components/stats/FilterBar';
 import ServiceCard from '../../components/stats/ServiceCard';
+import BookingModal from '../../components/modals/BookingModal';
 import { mockProfiles } from '../../data/mockProfiles';
 import './Search.css';
 
 const Search = () => {
+    const navigate = useNavigate();
+    const { user } = useAuth();
+
     // Master State (tracks all active "marketplace" filters)
     const [filters, setFilters] = useState({
         category: '', 
@@ -14,6 +20,29 @@ const Search = () => {
         minCgpa: '', 
         minSgpa: ''
     });
+
+    // Booking Modal State
+    const [isBookingOpen, setIsBookingOpen] = useState(false);
+    const [selectedService, setSelectedService] = useState(null);
+
+    // Database State
+    const [marketplaceListings, setMarketplaceListings] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchListings = async () => {
+            try {
+                const response = await fetch('http://localhost:5000/api/listings');
+                const data = await response.json();
+                setMarketplaceListings(data);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchListings();
+    }, []);
 
     const handleFilterChange = (name, value) => {
         // Handle "Clear Filters" button reset
@@ -37,7 +66,7 @@ const Search = () => {
     };
 
     // "MarketPlace" Filtering Engine
-    const filteredProfiles = mockProfiles.filter(profile => {
+    const filteredProfiles = marketplaceListings.filter(profile => {
         // Check Category (Exact Match)
         if (filters.category && profile.category !== filters.category) {
             return false;
@@ -75,8 +104,48 @@ const Search = () => {
 
     // Action Handler for Bookings
     const handleBookingRequest = (serviceInfo) => {
-        alert(`Initiating booking for "${serviceInfo.title}" with ${serviceInfo.displayName}. MUST UPDATE LATER`)
-    }
+        if (!user) {
+            alert('Please sign in to request a session!');
+            navigate('/login');
+            return;
+        }
+
+        // Save specific mentor's details to state so modal knows who we are booking
+        setSelectedService(serviceInfo);
+        setIsBookingOpen(true);
+    };
+
+    const handleCreateBooking = async (bookingPayload) => {
+        try {
+            const requestBody = {
+                client_id: bookingPayload.studentId, 
+                provider_id: activeListing.providerId,
+                listing_id: bookingPayload.listingId, 
+                topic: bookingPayload.topic, 
+                date_time: bookingPayload.dateTime, 
+                duration: Number(bookingPayload.duration), 
+                notes: bookingPayload.notes, 
+                total_cost: bookingPayload.totalCost
+            };
+
+            const response = await fetch('http://localhost:5000/api/bookings', {
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' }, 
+                body: JSON.stringify(requestBody),
+            });
+
+            if (response.ok) {
+                setIsBookingOpen(false);
+                alert(`Booking requested for ${bookingPayload.dateTime}! Total: $${bookingPayload.totalCost}.`);
+            } else {
+                const errorData = await response.json();
+                alert(`Error creating booking: ${errorData.error || 'Unknown error'}`);
+            }
+        } catch (error) {
+            console.error("Booking submission error:", error);
+            alert("Failed to connect to the server.");
+        }
+    };
 
     // Rendered Layout
     return (
@@ -118,7 +187,7 @@ const Search = () => {
                                 shadowingHours={profile.shadowingHours}
                                 volunteerHours={profile.volunteerHours}
                                 adviceSnippet={profile.adviceSnippet}
-                                onBookNow={handleBookingRequest}
+                                onBookNow={(info) => handleBookingRequest({ ...info, id: profile.id })}
                             />
                         ))
                     ) : (
@@ -129,6 +198,19 @@ const Search = () => {
                     )}
                 </div>
             </main>
+
+            {/* Floating Booking Modal */}
+            {selectedService && (
+                <BookingModal 
+                    isOpen={isBookingOpen}
+                    onClose={() => setIsBookingOpen(false)}
+                    onSubmit={handleCreateBooking}
+                    mentorName={selectedService.displayName}
+                    hourlyRate={selectedService.hourlyRate}
+                    listingId={selectedService.id}
+                    user={user}
+                />
+            )}
 
         </div>
     );

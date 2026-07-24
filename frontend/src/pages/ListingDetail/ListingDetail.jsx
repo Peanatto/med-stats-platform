@@ -20,21 +20,50 @@ const ListingDetail = () => {
     // Local State
     const [activeListing, setActiveListing] = useState(null);
     const [reviews, setReviews] = useState([]);
+    const [similarListings, setSimilarListings] = useState([]);
 
     // State for Modals
     const [isBookingOpen, setIsBookingOpen] = useState(false);
     const [isReviewOpen, setIsReviewOpen] = useState(false);
 
-    // Find exact mentor in array whose ID matches URL
-    // const initialListing = mockProfiles.find(profile => profile.id === id);
     useEffect(() => {
-        const foundListing = mockProfiles.find(profile => profile.id === id);
+        const fetchListingData = async () => {
+            try {
+                // Find exact mentor in array whose ID matches URL
+                const singleResponse = await fetch(`http://localhost:5000/api/listings/${id}`);
 
-        if (foundListing) {
-            setActiveListing(foundListing);
-            setReviews(foundListing.reviews || []);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+                if (singleResponse.ok) {
+                    const activeData = await singleResponse.json();
+                    setActiveListing(activeData);
+                    setReviews(activeData.reviews || []);
+
+                    const allResponse = await fetch('http://localhost:5000/api/listings');
+                    if (allResponse.ok) {
+                        const allListings = await allResponse.json();
+
+                        // Filter out current mentor, match category, slice 3
+                        let similar = allListings
+                            .filter(profile => profile.id !== activeData.id && profile.category === activeData.category)
+                            .slice(0, 3);
+
+                        // Backfill if less than 3 in same category
+                        if (similar.length < 3) {
+                            const backfill = allListings
+                                .filter(profile => profile.id !== activeData.id && !similar.some(s => s.id === profile.id))
+                                .slice(0, 3 - similar.length);
+                            similar = [...similar, ...backfill];
+                        }
+
+                        setSimilarListings(similar);
+                    }
+                }
+            } catch (error) {
+                console.error("Error finding mentor:", error);
+            }
+        };
+
+        fetchListingData();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }, [id]);
 
     // Fallback for id error
@@ -45,19 +74,6 @@ const ListingDetail = () => {
                 <p>We couldn't find a mentor matching that ID.</p>
             </div>
         );
-    }
-
-    // Dynamically grab 3 similar listings
-    const similarListings = mockProfiles
-        .filter(profile => profile.id !== activeListing.id && profile.category === activeListing.category)
-        .slice(0, 3);
-
-    // If not enough same-category profiles, backfill with others so UI looks full
-    if (similarListings.length < 3) {
-        const backfill = mockProfiles 
-            .filter(profile => profile.id !== activeListing.id && !similarListings.includes(profile))
-            .slice(0, 3 - similarListings.length);
-        similarListings.push(...backfill);
     }
 
     // HANDLERS
@@ -71,25 +87,73 @@ const ListingDetail = () => {
         openModalCallback(true);
     };
 
-    const handleCreateBooking = (bookingPayload) => {
-        console.log("Prepared Database Booking Payload:", bookingPayload);
-        setIsBookingOpen(false);
-        alert('Booking requested for ${bookingPayload.dateTime}! Total: $${bookingPayload.totalCost}.');
+    const handleCreateBooking = async (bookingPayload) => {
+        try {
+            const requestBody = {
+                client_id: bookingPayload.studentId, 
+                provider_id: activeListing.providerId,
+                listing_id: bookingPayload.listingId, 
+                topic: bookingPayload.topic, 
+                date_time: bookingPayload.dateTime, 
+                duration: Number(bookingPayload.duration), 
+                notes: bookingPayload.notes, 
+                total_cost: bookingPayload.totalCost
+            };
+
+            const response = await fetch('http://localhost:5000/api/bookings', {
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' }, 
+                body: JSON.stringify(requestBody),
+            });
+
+            if (response.ok) {
+                setIsBookingOpen(false);
+                alert(`Booking requested for ${bookingPayload.dateTime}! Total: $${bookingPayload.totalCost}.`);
+            } else {
+                const errorData = await response.json();
+                alert(`Error creating booking: ${errorData.error || 'Unknown error'}`);
+            }
+        } catch (error) {
+            console.error("Booking submission error:", error);
+            alert("Failed to connect to the server.");
+        }
     };
 
-    const handleCreateReview = (reviewPayload) => {
-        console.log("Prepared Database Review Payload:", reviewPayload);
+    const handleCreateReview = async (reviewPayload) => {
+        try {
+            const response = await fetch('http://localhost:5000/api/reviews', {
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' }, 
+                body: JSON.stringify({
+                    listing_id: reviewPayload.listingId, 
+                    client_id: reviewPayload.authorId, 
+                    rating: reviewPayload.rating, 
+                    comment: reviewPayload.comment
+                }),
+            });
 
-        // Dynamically update UI
-        const updatedReviews = [reviewPayload, ...reviews];
-        setReviews(updatedReviews);
+            if (response.ok) {
+                // Use database-backed review returned from server
+                const savedReview = await response.json();
 
-        // Recalculate average rating
-        const avgRating = (updatedReviews.reduce((acc, rev) => acc + rev.rating, 0) / updatedReviews.length).toFixed(1);
-        setActiveListing(prev => ({ ...prev, rating: Number(avgRating) }));
+                // Dynamically update UI with real data
+                const updatedReviews = [savedReview, ...reviews];
+                setReviews(updatedReviews);
 
-        setIsReviewOpen(false);
-        alert('Your review has been added to this profile.')
+                // Recalculate average rating
+                const avgRating = (updatedReviews.reduce((acc, rev) => acc + rev.rating, 0) / updatedReviews.length).toFixed(1);
+                setActiveListing(prev => ({ ...prev, rating: Number(avgRating) }));
+
+                setIsReviewOpen(false);
+                alert('Your review has been successfully added to this profile.');
+            } else {
+                const errorData = await response.json();
+                alert(`Error submitting review: ${errorData.message || 'Unknown error'}`);
+            }
+        } catch (error) {
+            console.error("Review submission error:", error);
+            alert("Failed to connect to the server.");
+        }
     }
 
     return (
@@ -118,11 +182,11 @@ const ListingDetail = () => {
                 {/* Right Column: Sticky Mentor Sidebar */}
                 <div className="sidebar-content">
                     <MentorSidebar 
-                        displayName={activeListing.displayName}
-                        undergradMajor={activeListing.undergradMajor}
-                        mcat={activeListing.mcat}
-                        cgpa={activeListing.cgpa}
-                        sgpa={activeListing.sgpa}
+                        displayName={activeListing.provider?.profile?.displayName}
+                        undergradMajor={activeListing.provider?.profile?.undergradMajor}
+                        mcat={activeListing.provider?.profile?.mcatScore}
+                        cgpa={activeListing.provider?.profile?.cumulativeGpa}
+                        sgpa={activeListing.provider?.profile?.scienceGpa}
                         onBookNow={() => handleActionGuard(setIsBookingOpen)}
                     />
                 </div>
@@ -139,7 +203,7 @@ const ListingDetail = () => {
                 isOpen={isBookingOpen}
                 onClose={() => setIsBookingOpen(false)}
                 onSubmit={handleCreateBooking}
-                mentorName={activeListing.displayName}
+                mentorName={activeListing.provider?.profile?.displayName}
                 hourlyRate={activeListing.hourlyRate}
                 listingId={activeListing.id}
                 user={user}
@@ -149,7 +213,7 @@ const ListingDetail = () => {
                 isOpen={isReviewOpen}
                 onClose={() => setIsReviewOpen(false)}
                 onSubmit={handleCreateReview}
-                mentorName={activeListing.displayName}
+                mentorName={activeListing.provider?.profile?.displayName}
                 listingId={activeListing.id}
                 user={user}
             />

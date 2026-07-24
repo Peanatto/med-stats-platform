@@ -7,7 +7,6 @@ const ListingFormModal = ({ isOpen, onClose, onSave, initialData }) => {
         category: 'MCAT Tutoring',
         hourlyRate: '',
         description: '',
-        adviceSnippet: '',
         tags: ''
     });
 
@@ -19,7 +18,6 @@ const ListingFormModal = ({ isOpen, onClose, onSave, initialData }) => {
                 category: initialData.category || 'MCAT Tutoring',
                 hourlyRate: initialData.hourlyRate || '',
                 description: initialData.description || '',
-                adviceSnippet: initialData.adviceSnippet || '',
                 tags: Array.isArray(initialData.tags) ? initialData.tags.join(', ') : (initialData.tags || '')
             });
         }
@@ -116,19 +114,6 @@ const ListingFormModal = ({ isOpen, onClose, onSave, initialData }) => {
                             onChange={handleChange}
                             placeholder="Explain your tutoring style, what students can expect, and your background..."
                             className="form-textarea"
-                        />
-                    </div>
-
-                    {/* Advice Snippet */}
-                    <div className="form-group">
-                        <label className="form-label">Quick Advice Snippet (Shown on Profile)</label>
-                        <input 
-                            type="text" 
-                            name="adviceSnippet" 
-                            value={formData.adviceSnippet} 
-                            onChange={handleChange}
-                            placeholder="e.g., Consistency beats intensity every time!"
-                            className="form-input"
                         />
                     </div>
 

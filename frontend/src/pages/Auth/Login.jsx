@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { GoogleLogin } from "@react-oauth/google";
 import './Auth.css';
 
 const Login = () => {
@@ -13,17 +14,28 @@ const Login = () => {
 
     const handleEmailLogin = async (e) => {
         e.preventDefault();
+        setError('');
+
         if (!email || !password) {
             setError('Please fill in all fields.');
             return;
         }
-        await login(email, password);
-        navigate('/');  // Explore page
+
+        try {
+            await login(email, password);
+            navigate('/');  // Redirect to explore page on success
+        } catch (err) {
+            setError(err.message);
+        }
     };
 
-    const handleGoogleLogin = async () => {
-        await loginWithGoogle();
-        navigate('/');  // Explore page
+    const handleGoogleSuccess = async (credentialResponse) => {
+        try {
+            await loginWithGoogle(credentialResponse.credential);
+            navigate('/');
+        } catch (err) {
+            setError(err.message);
+        }
     };
 
     return (
@@ -37,10 +49,12 @@ const Login = () => {
 
                 {error && <div className="auth-error-alert">{error}</div>}
 
-                <button className="btn-google-auth" onClick={handleGoogleLogin}>
-                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="google-icon" />
-                    Continue with Google
-                </button>
+                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+                    <GoogleLogin 
+                        onSuccess={handleGoogleSuccess}
+                        onError={() => setError('Google authentication failed')}
+                    />
+                </div>
 
                 <div className="auth-divider">
                     <span>or sign in with email</span>

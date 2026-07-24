@@ -7,13 +7,13 @@ const MyBookings = ({ user, allBookings = [], onUpdateStatus }) => {
 
     // Grab all bookings where the user is EITHER the mentor or the mentee
     const userBookings = allBookings.filter(booking => 
-        booking.mentorId === user.id || booking.studentId === user.id
+        booking.providerId === user.id || booking.clientId === user.id
     );
 
     // Apply sub-tab filtering if selected
     const displayedBookings = userBookings.filter(booking => {
-        if (filterRole === 'mentor') return booking.mentorId === user.id;
-        if (filterRole === 'student') return booking.studentId === user.id;
+        if (filterRole === 'mentor') return booking.providerId === user.id;
+        if (filterRole === 'student') return booking.clientId === user.id;
         return true;
     });
 
@@ -68,7 +68,15 @@ const MyBookings = ({ user, allBookings = [], onUpdateStatus }) => {
             <div className="bookings-list">
                 {displayedBookings.map((booking) => {
                     // DETERMINE ROLE FOR THIS SPECIFIC CARD:
-                    const isMentor = booking.mentorId === user.id;
+                    const isMentor = booking.providerId === user.id;
+                    const counterpartProfile = isMentor ? booking.client?.profile : booking.provider?.profile;
+                    const counterpartName = counterpartProfile?.displayName || 'Unknown User';
+                    const counterpartMajor = counterpartProfile?.undergradMajor || 'Pre-Med';
+                    const serviceTitle = booking.listing?.title || 'Mentorship Session';
+                    const hourlyRate = booking.listing?.hourlyRate || 0;
+
+                    const sessionDate = new Date(booking.dateTime).toLocaleDateString();
+                    const sessionTime = new Date(booking.dateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
                     return (
                         <div key={booking.id} className="booking-card">
@@ -92,16 +100,16 @@ const MyBookings = ({ user, allBookings = [], onUpdateStatus }) => {
                                     {/* If Mentor, show Student name. If Pre-Med, show Mentor name! */}
                                     <span className="detail-label">{isMentor ? 'STUDENT (PRE-MED)' : 'MENTOR (MED STUDENT)'}</span>
                                     <span className="detail-value font-bold">
-                                        {isMentor ? `${booking.studentName} (${booking.studentMajor})` : booking.mentorName}
+                                        {isMentor ? `${counterpartName} (${counterpartMajor})` : counterpartName}
                                     </span>
                                 </div>
                                 <div className="detail-item">
                                     <span className="detail-label">SCHEDULED TIME</span>
-                                    <span className="detail-value">🗓️ {booking.date} • ⏰ {booking.time}</span>
+                                    <span className="detail-value">🗓️ {sessionDate} • ⏰ {sessionTime}</span>
                                 </div>
                                 <div className="detail-item">
                                     <span className="detail-label">RATE</span>
-                                    <span className="detail-value">${booking.hourlyRate}/hr</span>
+                                    <span className="detail-value">${hourlyRate}/hr</span>
                                 </div>
                             </div>
 

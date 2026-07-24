@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { GoogleLogin } from '@react-oauth/google';
 import './Auth.css';
 
 const Register = () => {
@@ -15,6 +16,8 @@ const Register = () => {
 
     const handleRegister = async (e) => {
         e.preventDefault();
+        setError('');
+
         if (password !== confirmPassword) {
             setError('Passwords do not match.');
             return;
@@ -23,13 +26,22 @@ const Register = () => {
             setError('Password must be at least 6 characters.');
             return;
         }
-        await register(email, password, role);
-        navigate('/');  // Explore page
+        
+        try {
+            await register(email, password, role);
+            navigate('/');  // Redirect to explore page on success
+        } catch (err) {
+            setError(err.message);  // Display backend error message
+        }
     };
 
-    const handleGoogleSignup = async () => {
-        await loginWithGoogle();
-        navigate('/');  // Explore page
+    const handleGoogleSuccess = async (credentialResponse) => {
+        try {
+            await loginWithGoogle(credentialResponse.credential);
+            navigate('/');
+        } catch (err) {
+            setError(err.message);
+        }
     };
 
     return (
@@ -64,10 +76,12 @@ const Register = () => {
                     </div>
                 </div>
 
-                <button className="btn-google-auth" onClick={handleGoogleSignup}>
-                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="google-icon" />
-                    Sign up with Google
-                </button>
+                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+                    <GoogleLogin 
+                        onSuccess={handleGoogleSuccess}
+                        onError={() => setError('Google authentication failed')}
+                    />
+                </div>
 
                 <div className="auth-divider">
                     <span>or register with email</span>

@@ -9,7 +9,7 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   // Extract initial for avatar fallback if displayName exists
-  const initial = user?.displayName ? user.displayName.charAt(0).toUpperCase() : 'M';
+  const initial = user?.profile?.displayName ? user.profile.displayName.charAt(0).toUpperCase() : 'M';
 
   const handleLogout = () => {
     logout();
@@ -38,7 +38,7 @@ const Navbar = () => {
 
           {user && (
             <NavLink 
-              to="/dashboard/:id" 
+              to={`/dashboard/${user.id}`} 
               className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}
             >
               📊 My Dashboard
@@ -50,9 +50,9 @@ const Navbar = () => {
           {user ? (
             <>
               {/* User Profile Badge (Links directly to Dashboard) */}
-              <Link to="/dashboard/:id" className="navbar-user-widget" title="Go to Account Settings">
+              <Link to={`/dashboard/${user.id}`} className="navbar-user-widget" title="Go to Account Settings">
                 <div className="user-avatar">{initial}</div>
-                <span className="user-display-name">{user?.displayName || 'My Account'}</span>
+                <span className="user-display-name">{user?.profile?.displayName || 'My Account'}</span>
                 <span className="status-dot"></span>
               </Link>
 
